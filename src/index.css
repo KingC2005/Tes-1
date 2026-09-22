@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* 'Vazirmatn Variable' is bundled locally via @fontsource-variable/vazirmatn */
+  --font-sans: 'Vazirmatn Variable', 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {

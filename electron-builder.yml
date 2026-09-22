@@ -1,0 +1,51 @@
+appId: com.kingc2005.nahar-accounting
+productName: حسابداری ناهار
+copyright: Copyright © 2026 KingC2005
+
+directories:
+  buildResources: resources
+  output: release
+
+files:
+  - electron-main.cjs
+  - electron-preload.cjs
+  - dist/**/*
+  - package.json
+
+asar: true
+compression: normal
+
+win:
+  icon: resources/icon.ico
+  requestedExecutionLevel: asInvoker
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  allowElevation: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: حسابداری ناهار
+  uninstallDisplayName: حسابداری ناهار
+  unicode: true
+  installerIcon: resources/icon.ico
+  uninstallerIcon: resources/icon.ico
+  artifactName: NaharAccounting-Setup-${version}.${ext}
+
+portable:
+  artifactName: NaharAccounting-Portable-${version}.${ext}
+
+linux:
+  icon: resources/icon.png
+  category: Office
+  target:
+    - AppImage
+  artifactName: NaharAccounting-${version}.${ext}
