@@ -19,10 +19,12 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        shell: bash
+        run: npm ci --no-audit --no-fund 2>&1 | tee install-log.txt
 
       - name: Build desktop bundle + Windows installers
-        run: npm run dist:win
+        shell: bash
+        run: npm run dist:win 2>&1 | tee build-log.txt
 
       - name: Upload installers
         uses: actions/upload-artifact@v4
@@ -31,3 +33,31 @@ jobs:
           path: |
             release/*.exe
           if-no-files-found: error
+
+      - name: Publish build log on failure
+        if: failure()
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo '### Windows build failed — log tail'
+            echo '```'
+            tail -n 80 install-log.txt build-log.txt 2>/dev/null
+            echo '```'
+          } > summary.md
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+          python - <<'PY'
+          import json, os, urllib.request
+          body = open('summary.md', encoding='utf-8').read()
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/commits/{os.environ['GITHUB_SHA']}/comments",
+              data=json.dumps({'body': body}).encode(),
+              headers={
+                  'Authorization': 'Bearer ' + os.environ['GITHUB_TOKEN'],
+                  'Accept': 'application/vnd.github+json',
+                  'Content-Type': 'application/json',
+              },
+              method='POST')
+          print('comment status:', urllib.request.urlopen(req).status)
+          PY
