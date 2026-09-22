@@ -6,6 +6,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -22,9 +25,13 @@ jobs:
         shell: bash
         run: npm ci --no-audit --no-fund 2>&1 | tee install-log.txt
 
-      - name: Build desktop bundle + Windows installers
+      - name: Build desktop bundle (Vite)
         shell: bash
-        run: npm run dist:win 2>&1 | tee build-log.txt
+        run: npm run build:desktop 2>&1 | tee build-log.txt
+
+      - name: Package Windows installers (electron-builder)
+        shell: bash
+        run: npx electron-builder --win 2>&1 | tee -a build-log.txt
 
       - name: Upload installers
         uses: actions/upload-artifact@v4
@@ -43,21 +50,8 @@ jobs:
           {
             echo '### Windows build failed — log tail'
             echo '```'
-            tail -n 80 install-log.txt build-log.txt 2>/dev/null
+            tail -n 100 install-log.txt build-log.txt 2>/dev/null || true
             echo '```'
           } > summary.md
-          cat summary.md >> "$GITHUB_STEP_SUMMARY"
-          python - <<'PY'
-          import json, os, urllib.request
-          body = open('summary.md', encoding='utf-8').read()
-          req = urllib.request.Request(
-              f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/commits/{os.environ['GITHUB_SHA']}/comments",
-              data=json.dumps({'body': body}).encode(),
-              headers={
-                  'Authorization': 'Bearer ' + os.environ['GITHUB_TOKEN'],
-                  'Accept': 'application/vnd.github+json',
-                  'Content-Type': 'application/json',
-              },
-              method='POST')
-          print('comment status:', urllib.request.urlopen(req).status)
-          PY
+          cat summary.md >> "$GITHUB_STEP_SUMMARY" || true
+          node -e "const fs=require('fs');const body=fs.readFileSync('summary.md','utf8');fetch('https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/commits/'+process.env.GITHUB_SHA+'/comments',{method:'POST',headers:{Authorization:'Bearer '+process.env.GITHUB_TOKEN,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify({body})}).then(async r=>{console.log('comment status',r.status, (await r.text()).slice(0,300));})"
