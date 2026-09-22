@@ -16,6 +16,7 @@ import {
   FolderArchive
 } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import { isDesktopApp } from '../desktop';
 
 interface AppExportModalProps {
   isOpen: boolean;
@@ -252,6 +253,14 @@ pause
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Desktop-runtime notice */}
+        {isDesktopApp() && (
+          <div className="mx-4 sm:mx-6 mt-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <span>شما در حال اجرای نسخه دسکتاپ (Electron) «حسابداری ناهار» هستید؛ داده‌ها به صورت محلی روی همین دستگاه ذخیره می‌شوند و نیازی به نصب مجدد نیست.</span>
+          </div>
+        )}
 
         {/* Tab Selection */}
         <div className="flex flex-wrap border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-1.5 gap-1.5">

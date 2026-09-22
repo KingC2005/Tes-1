@@ -1,0 +1,60 @@
+name: Build Windows App
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        shell: bash
+        run: npm ci --no-audit --no-fund 2>&1 | tee install-log.txt
+
+      - name: Build desktop bundle (Vite)
+        shell: bash
+        run: npm run build:desktop 2>&1 | tee build-log.txt
+
+      - name: Package Windows installers (electron-builder)
+        shell: bash
+        env:
+          # Publish the built installers as a GitHub Release for the pushed tag
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder --win 2>&1 | tee -a build-log.txt
+
+      - name: Upload installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installers
+          path: |
+            release/*.exe
+          if-no-files-found: error
+
+      - name: Publish build log on failure
+        if: failure()
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo '### Windows build failed — log tail'
+            echo '```'
+            tail -n 100 install-log.txt build-log.txt 2>/dev/null || true
+            echo '```'
+          } > summary.md
+          cat summary.md >> "$GITHUB_STEP_SUMMARY" || true
+          node -e "const fs=require('fs');const body=fs.readFileSync('summary.md','utf8');fetch('https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/commits/'+process.env.GITHUB_SHA+'/comments',{method:'POST',headers:{Authorization:'Bearer '+process.env.GITHUB_TOKEN,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify({body})}).then(async r=>{console.log('comment status',r.status, (await r.text()).slice(0,300));})"
