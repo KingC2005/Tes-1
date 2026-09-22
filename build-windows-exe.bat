@@ -24,7 +24,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo 3. در حال تولید فایل Setup و Portable EXE برای ویندوز...
-call npx electron-builder --win
+call npx electron-builder --win --publish never
 if %errorlevel% neq 0 (
     echo [خطا] تولید فایل EXE ناموفق بود!
     pause

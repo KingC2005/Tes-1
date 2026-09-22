@@ -31,6 +31,9 @@ jobs:
 
       - name: Package Windows installers (electron-builder)
         shell: bash
+        env:
+          # Publish the built installers as a GitHub Release for the pushed tag
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx electron-builder --win 2>&1 | tee -a build-log.txt
 
       - name: Upload installers

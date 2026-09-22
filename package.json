@@ -12,7 +12,7 @@
     "build": "vite build",
     "build:desktop": "vite build --mode desktop",
     "desktop": "npm run build:desktop && electron .",
-    "dist:win": "npm run build:desktop && electron-builder --win",
+    "dist:win": "npm run build:desktop && electron-builder --win --publish never",
     "dist:linux": "npm run build:desktop && electron-builder --linux AppImage",
     "icons": "node scripts/make-icon.mjs",
     "preview": "vite preview",
