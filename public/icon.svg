@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="512" height="512" rx="104" fill="url(#bg)"/>
+
+  <!-- Subtle Rim Glow -->
+  <rect x="6" y="6" width="500" height="500" rx="98" fill="none" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.2"/>
+
+  <!-- Main Plate / Circle -->
+  <g filter="url(#shadow)">
+    <circle cx="256" cy="256" r="160" fill="#1e293b" stroke="#334155" stroke-width="8"/>
+    <circle cx="256" cy="256" r="130" fill="none" stroke="#059669" stroke-width="3" stroke-dasharray="8 6" stroke-opacity="0.6"/>
+
+    <!-- Cloche / Bowl Motif -->
+    <!-- Steam / Warmth waves -->
+    <path d="M220 150 C215 135 228 125 222 110" fill="none" stroke="#34d399" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+    <path d="M256 142 C251 127 264 117 258 102" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+    <path d="M292 150 C287 135 300 125 294 110" fill="none" stroke="#34d399" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+
+    <!-- Serving Platter Dome Base -->
+    <path d="M166 270 C166 200 210 170 256 170 C302 170 346 200 346 270 Z" fill="url(#accent)"/>
+    <!-- Dome Handle Knob -->
+    <ellipse cx="256" cy="165" rx="16" ry="10" fill="#f8fafc"/>
+    <rect x="251" y="167" width="10" height="6" fill="#cbd5e1"/>
+
+    <!-- Serving Platter Plate Edge -->
+    <rect x="146" y="270" width="220" height="14" rx="7" fill="#f8fafc"/>
+
+    <!-- Accounting Coin / Badge Emblem -->
+    <g transform="translate(256, 320)" filter="url(#shadow)">
+      <circle cx="0" cy="0" r="42" fill="url(#gold)" stroke="#fef3c7" stroke-width="3"/>
+      <!-- Calculator / Accounting Bars / Persian symbol -->
+      <path d="M-16 -12 L16 -12 M-16 -2 L16 -2 M-12 12 L12 12" stroke="#78350f" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="0" cy="8" r="3" fill="#78350f"/>
+    </g>
+  </g>
+</svg>

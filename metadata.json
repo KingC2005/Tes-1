@@ -1,0 +1,8 @@
+{
+  "name": "حسابداری ناهار",
+  "description": "سامانه جامع مدیریت انبار مواد غذایی، ثبت وعده‌های ناهار، محاسبه دنگ و حسابداری اعضا",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
